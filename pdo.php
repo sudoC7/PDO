@@ -11,7 +11,8 @@
         try
         {
             // On se connecte à MySQL
-            $mysqlClient = new PDO('mysql:host=localhost;dbname=Recettes1;charset=utf8', 'root', 'root');
+            $mysqlClient = new PDO('mysql:host=localhost;dbname=Recettes1;charset=utf8', 'root', 'root', [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION],
+        );
         }
         catch (Exception $e)
         {   
@@ -25,11 +26,11 @@
         FROM RECETTE 
         INNER JOIN PREPARATION ON RECETTE.id_recette = PREPARATION.id_recette
         INNER JOIN INGREDIENTS  ON PREPARATION.id_ingredients = INGREDIENTS.id_ingredients
-        ORDER BY Prix_Recette DESC 
-              ';
+        GROUP BY RECETTE.id_recette
+        ORDER BY Prix_Recette DESC';
 
         $recetteStatement = $mysqlClient->prepare($mySQL);
-        $recetteStatement->execute([]);
+        $recetteStatement->execute();
         $recettes = $recetteStatement->fetchAll();
 
         ?>
@@ -37,8 +38,7 @@
         <table>
         <tr>
             <th>Nom</th>
-            <th>TempPreparation</th>
-            <th>Prix du recette</th>
+            <th>TempPreparation</th>   
         </tr>      
 
         <?php
@@ -46,8 +46,7 @@
         ?>
         <tr>
             <td><?php echo $recette['Nom']; ?></td>
-            <td><?php echo $recette['TempPreparation']; ?></td>
-            <td><?php echo $recette['Prix_recette']; ?></td>
+            <td><?php echo $recette['TempPreparation']; ?></td> 
         </tr>
         
         <?php
@@ -62,7 +61,7 @@
 
 
 
-
+<!-- L'objectif dans un 1er temps sera de réussir à afficher la liste des recettes (nom de la recette + temps de préparation) dans un tableau HTML classées de la recette la plus coûteuse à la moins coûteuse  -->
 
 
 
