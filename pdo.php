@@ -22,7 +22,7 @@
         // Si tout va bien, on peut continuer
 
         // On récupère tout le contenu de la table RECETTE
-        $mySQL = 'SELECT Nom, TempPreparation, SUM(INGREDIENTS.Prix * PREPARATION.quantite) AS Prix_Recette
+        $mySQL = 'SELECT recette.id_recette, Nom, TempPreparation, SUM(INGREDIENTS.Prix * PREPARATION.quantite) AS Prix_Recette
         FROM RECETTE 
         INNER JOIN PREPARATION ON RECETTE.id_recette = PREPARATION.id_recette
         INNER JOIN INGREDIENTS  ON PREPARATION.id_ingredients = INGREDIENTS.id_ingredients
@@ -32,20 +32,18 @@
         $recetteStatement = $mysqlClient->prepare($mySQL);
         $recetteStatement->execute();
         $recettes = $recetteStatement->fetchAll();
-
         
         echo "<table>
         <tr>
             <th>Nom</th>
         </tr>";      
         
-        foreach($recettes as $recette) {
-            echo "<tr><td><a href='liste.php?id'>".$recette['Nom']."</a></td></tr>";
-            
-        }
+        foreach($recettes as $recette) {?>
+            <tr><td><a href="liste.php?id=<?= $recette["id_recette"] ?>"><?= $recette["Nom"] ?></a></td></tr>
+        <?php }
+
         var_dump($recettes);
         echo "</table>";
-
         ?>
 
 
@@ -58,8 +56,8 @@
      Au clic sur la recette, on affiche son détail 
      (nom, durée, description + liste des ingrédients) -->
 
+<!-- avec la superglobal GET envoyer la valeur vers le nouveau fichier -->
 
-<!-- L'objectif dans un 1er temps sera de réussir à afficher la liste des recettes (nom de la recette + temps de préparation) dans un tableau HTML classées de la recette la plus coûteuse à la moins coûteuse  -->
 
 
 
