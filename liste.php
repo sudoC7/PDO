@@ -1,12 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">     
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
 <body>
-        <?php
+
+    <?php
+
+        $id = (isset($_GET['id'])) ? ($_GET['id']) : null;
                 
         try
         {
@@ -22,49 +25,33 @@
         // Si tout va bien, on peut continuer
 
         // On récupère tout le contenu de la table RECETTE
-        $mySQL = 'SELECT Nom, TempPreparation, SUM(INGREDIENTS.Prix * PREPARATION.quantite) AS Prix_Recette
+        $mySQL = 'SELECT Nom, TempPreparation, Instructions, INGREDIENTS.NomIngredient
         FROM RECETTE 
         INNER JOIN PREPARATION ON RECETTE.id_recette = PREPARATION.id_recette
-        INNER JOIN INGREDIENTS  ON PREPARATION.id_ingredients = INGREDIENTS.id_ingredients
-        GROUP BY RECETTE.id_recette
-        ORDER BY Prix_Recette DESC';
+        INNER JOIN INGREDIENTS ON PREPARATION.id_ingredients = INGREDIENTS.id_ingredients
+        WHERE Nom = "" LIMIT 1';
 
         $recetteStatement = $mysqlClient->prepare($mySQL);
         $recetteStatement->execute();
         $recettes = $recetteStatement->fetchAll();
 
-        
         echo "<table>
         <tr>
             <th>Nom</th>
-        </tr>";      
-        
+            <th>TempPreparation</th>
+            <th>Instructions</th>
+            <th>NomIngredient</th>
+         </tr>";      
+
         foreach($recettes as $recette) {
-            echo "<tr><td><a href='liste.php?id'>".$recette['Nom']."</a></td></tr>";
-            
+            echo "<tr><td><a href='liste.php?Nom'>".$recette['Nom']."</a></td></tr>";
+            echo "<tr><td><a href='liste.php'>".$recette['TempPreparation']."</a></td></tr>";
+            echo "<tr><td><a href='liste.php'>".$recette['Instructions']."</a></td></tr>";
+            echo "<tr><td><a href='liste.php'>".$recette['NomIngredient']."</a></td></tr>";
         }
-        var_dump($recettes);
         echo "</table>";
 
-        ?>
-
-
+    ?>
+    
 </body>
 </html>
-
-
-<!-- Dans la liste de tes recettes, 
-     transformer le nom de la recette en lien <a>
-     Au clic sur la recette, on affiche son détail 
-     (nom, durée, description + liste des ingrédients) -->
-
-
-<!-- L'objectif dans un 1er temps sera de réussir à afficher la liste des recettes (nom de la recette + temps de préparation) dans un tableau HTML classées de la recette la plus coûteuse à la moins coûteuse  -->
-
-
-
-
-
-
-
-
