@@ -37,7 +37,7 @@
         <tr>
             <th>Nom</th>
         </tr>";      
-        
+        // Avec le Foreach je récupère dans le href l'id_recette ainsi qu'entre balise le nom du recette 
         foreach($recettes as $recette) {?>
             <tr><td><a href="liste.php?id=<?= $recette["id_recette"] ?>"><?= $recette["Nom"] ?></a></td></tr>
         <?php }
